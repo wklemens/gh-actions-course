@@ -12,8 +12,4 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Printing Folders
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Contents:"
-          cd ../
-          ls -la
+        run: ls
