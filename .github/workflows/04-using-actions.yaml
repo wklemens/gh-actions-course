@@ -1,0 +1,18 @@
+# See 04-using-actions/README.md for more information
+# about using actions within workflows.
+
+name: 04 - Using Actions
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Printing Folders
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Contents:"
+          ls -la
