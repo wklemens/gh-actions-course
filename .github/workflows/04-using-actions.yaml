@@ -15,5 +15,5 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           echo "Contents:"
-          cd ../workflows
+          cd ../
           ls -la
