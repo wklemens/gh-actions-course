@@ -15,4 +15,5 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           echo "Contents:"
+          cd ../
           ls -la
