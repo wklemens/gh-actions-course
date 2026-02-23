@@ -43,4 +43,3 @@ jobs:
               echo "Env-var OVERWRITTEN_VAR: ${{ vars.OVERWRITTEN_VAR }}"
               echo "shell env OVERWRITTEN_VAR: ${{ vars.OVERWRITTEN_VAR }}"
               echo "vars context: ${{ vars.OVERWRITTEN_VAR }}"
-              echo "shell env: $OVERWRITTEN_VAR"
