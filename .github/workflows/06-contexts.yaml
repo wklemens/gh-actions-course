@@ -78,7 +78,7 @@ jobs:
                   -H "Authorization: Bearer $RESEND_API_KEY" \
                   -H "Content-Type: application/json" \
                   -d '{
-                    "from": "workflow-notifications@example.com",
+                    "from": "onboarding@resend.dev",
                     "to": ["klemens@wolfgruber.com", "redogul@web.de"],
                     "subject": "Workflow ${{ github.workflow }} #${{ github.run_number }} -- ${{ steps.status.outputs.result }}",
                     "html": "<h2>Workflow Run Notification</h2><table><tr><td><strong>Status</strong></td><td>${{ steps.status.outputs.result }}</td></tr><tr><td><strong>Workflow</strong></td><td>${{ github.workflow }}</td></tr><tr><td><strong>Repository</strong></td><td>${{ github.repository }}</td></tr><tr><td><strong>Branch / Ref</strong></td><td>${{ github.ref }}</td></tr><tr><td><strong>Run ID</strong></td><td>${{ github.run_id }}</td></tr><tr><td><strong>Run Number</strong></td><td>${{ github.run_number }}</td></tr><tr><td><strong>Link</strong></td><td><a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">View run</a></td></tr></table>"
