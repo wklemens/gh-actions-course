@@ -74,7 +74,8 @@ jobs:
               env:
                 RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
               run: |
-                curl --fail -sS -X POST https://api.resend.com/emails \
+                # curl --fail -sS -X POST https://api.resend.com/emails \
+                curl -sS -X POST https://api.resend.com/emails \
                   -H "Authorization: Bearer $RESEND_API_KEY" \
                   -H "Content-Type: application/json" \
                   -d '{
