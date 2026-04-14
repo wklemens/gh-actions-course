@@ -45,6 +45,11 @@ jobs:
           echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
           echo "Overwritten env: ${{ env.MY_OVERWRITTEN_VAR }}"
 
+      - name: Display Information
+        run: |
+          echo "Test"
+          exit 1  # <-- erzwingt failure
+
   echo-data2:
     runs-on: ubuntu-latest
     steps:
