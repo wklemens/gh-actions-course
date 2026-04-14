@@ -1,76 +1,79 @@
 name: 06 - Contexts
 run-name: 06 - Contexts | DEBUG - ${{ inputs.debug }}
 
-on: 
-    workflow_dispatch:
-        inputs:
-            debug:
-                type: boolean
-                default: false
+on:
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        default: false
 
+env:
+  MY_WORKFLOW_VAR: "workflow"
+  MY_OVERWRITTEN_VAR: "workflow"
 
-env:                
-    MY_WORKFLOW_VAR: 'workflow'
-    MY_OVERWRITTEN_VAR: 'workflow'
 jobs:
-    echo-data:
-        runs-on: ubuntu-latest
+  echo-data:
+    runs-on: ubuntu-latest
+    env:
+      MY_JOB_VAR: "job"
+      MY_OVERWRITTEN_VAR: "job"
+    steps:
+      - name: Display Information
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+
+      - name: Retrieve Variable
+        run: |
+          echo "Variable value: ${{ vars.MY_VAR }}"
+
+      - name: Print Env Variables (step override)
         env:
-            MY_JOB_VAR: 'job'
-            MY_OVERWRITTEN_VAR: 'job'
-        steps:
-            - name: Display Information
-              run: |
-                echo "Event name: ${{ github.event_name }}"
-                echo "RRef: ${{ github.ref }}"
-                echo "SHA: ${{ github.sha }}"
-                echo "Actor: ${{ github.actor }}"
-                echo "Workflow: ${{ github.workflow }}"
-                echo "Run ID: ${{ github.run_id }}"
-                echo "Run Number: ${{ github.run_number }}"
+          MY_OVERWRITTEN_VAR: "step"
+        run: |
+          echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
+          echo "Overwritten env: ${{ env.MY_OVERWRITTEN_VAR }}"
 
-            - name: Retrieve Variable
-              run: |
-                echo "Variable value: ${{ vars.MY_VAR }}"
-            - name: Print Env Variables
-              env:
-                MY_OVERWRITTEN_VAR: 'step'
-              run: |
-                echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
-                echo "Overwritten env: ${{ env.MY_OVERWRITTEN_VAR }}"
-            - name: Print Env Variables
-              run: |
-                echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
-                echo "Overwritten env: ${{ env.MY_OVERWRITTEN_VAR }}"
+      - name: Print Env Variables (job level)
+        run: |
+          echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
+          echo "Overwritten env: ${{ env.MY_OVERWRITTEN_VAR }}"
 
-    echo-data2:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Print Env Variables
-              run: |
-                echo "Workflow env: $MY_WORKFLOW_VAR"
-                echo "Overwritten env: $MY_OVERWRITTEN_VAR"
-    
-    notify:
-      runs-on: ubuntu-latest
-      needs: [echo-data, echo-data2]
-      if: always()
-      steps:
-        - name: Sende Test-Mail an mehrere Empfänger
-          uses: dawidd6/action-send-mail@v3
-          with:
-            server_address: ${{ secrets.SMTP_HOST }}
-            server_port: ${{ secrets.SMTP_PORT }}
-            username: ${{ secrets.SMTP_USERNAME }}
-            password: ${{ secrets.SMTP_PASSWORD }}
-            secure: true
-            subject: "Testmail GitHub Actions - ${{ needs.test.result }}"
-            to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com
-            from: GitHub Actions <noreply@beispiel.de>
-            body: |
-              Das ist eine Testmail aus GitHub Actions.
-              Status des Jobs "test": ${{ needs.test.result }}
-              Workflow: ${{ github.workflow }}
-              Repository: ${{ github.repository }}
-              Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
+  echo-data2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Env Variables
+        run: |
+          echo "Workflow env: $MY_WORKFLOW_VAR"
+          echo "Overwritten env: $MY_OVERWRITTEN_VAR"
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [echo-data, echo-data2]
+    if: ${{ always() && (needs.echo-data.result == 'failure' || needs.echo-data2.result == 'failure') }}
+    steps:
+      - name: Sende Fehler-Mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          secure: true
+          subject: "❌ Workflow fehlgeschlagen: ${{ github.workflow }} (#${{ github.run_number }})"
+          to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com
+          from: GitHub Actions <noreply@beispiel.de>
+          body: |
+            Kurzer Fehlerbericht:
+            - echo-data:  ${{ needs.echo-data.result }}
+            - echo-data2: ${{ needs.echo-data2.result }}
+
+            Workflow: ${{ github.workflow }}
+            Repository: ${{ github.repository }}
+            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
