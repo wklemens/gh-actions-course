@@ -1,0 +1,34 @@
+name: 06-01-Mailtest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Testschritt
+        run: echo "Workflow lief durch"
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: always()
+    steps:
+      - name: Sende Test-Mail an 2 Empfänger
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          secure: true
+          subject: "Testmail GitHub Actions - ${{ needs.test.result }}"
+          to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com
+          from: GitHub Actions <noreply@beispiel.de>
+          body: |
+            Das ist eine Testmail aus GitHub Actions.
+            Status des Jobs "test": ${{ needs.test.result }}
+            Workflow: ${{ github.workflow }}
+            Repository: ${{ github.repository }}
+            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
