@@ -54,10 +54,9 @@ jobs:
     notify:
       runs-on: ubuntu-latest
       needs: [echo-data, echo-data2]
-      # Nur senden, wenn mindestens einer der Jobs fehlgeschlagen ist
-      if: ${{ always() && (needs.echo-data.result == 'failure' || needs.echo-data2.result == 'failure') }}
+      if: always()
       steps:
-        - name: Sende Fehler-Mail
+        - name: Sende Test-Mail an mehrere Empfänger
           uses: dawidd6/action-send-mail@v3
           with:
             server_address: ${{ secrets.SMTP_HOST }}
@@ -65,14 +64,12 @@ jobs:
             username: ${{ secrets.SMTP_USERNAME }}
             password: ${{ secrets.SMTP_PASSWORD }}
             secure: true
-            subject: "Workflow fehlgeschlagen: ${{ github.workflow }} (#${{ github.run_number }})"
+            subject: "Testmail GitHub Actions - ${{ needs.test.result }}"
             to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com
             from: GitHub Actions <noreply@beispiel.de>
             body: |
-              Kurzer Fehlerbericht:
-              - echo-data:  ${{ needs.echo-data.result }}
-              - echo-data2: ${{ needs.echo-data2.result }}
-    
+              Das ist eine Testmail aus GitHub Actions.
+              Status des Jobs "test": ${{ needs.test.result }}
               Workflow: ${{ github.workflow }}
               Repository: ${{ github.repository }}
               Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
