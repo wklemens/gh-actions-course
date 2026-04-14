@@ -71,8 +71,8 @@ jobs:
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
           secure: true
-          subject: "❌ Workflow fehlgeschlagen: ${{ github.workflow }} (#${{ github.run_number }})"
-          to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com
+          subject: "Workflow fehlgeschlagen: ${{ github.workflow }} (#${{ github.run_number }})"
+          to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com, redogul@gmx.de
           from: GitHub Actions <noreply@beispiel.de>
           body: |
             Kurzer Fehlerbericht:
