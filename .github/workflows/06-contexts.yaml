@@ -64,12 +64,13 @@ jobs:
             username: ${{ secrets.SMTP_USERNAME }}
             password: ${{ secrets.SMTP_PASSWORD }}
             secure: true
-            subject: "Testmail GitHub Actions - ${{ needs.test.result }}"
+            subject: "Testmail GitHub Actions - echo-data: ${{ needs.echo-data.result }}, echo-data2: ${{ needs.echo-data2.result }}"
             to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com
             from: GitHub Actions <noreply@beispiel.de>
             body: |
               Das ist eine Testmail aus GitHub Actions.
-              Status des Jobs "test": ${{ needs.test.result }}
+              Status des Jobs "echo-data": ${{ needs.echo-data.result }}
+              Status des Jobs "echo-data2": ${{ needs.echo-data2.result }}
               Workflow: ${{ github.workflow }}
               Repository: ${{ github.repository }}
               Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
