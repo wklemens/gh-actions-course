@@ -66,7 +66,7 @@ jobs:
             secure: true
             subject: "Testmail GitHub Actions - echo-data: ${{ needs.echo-data.result }}, echo-data2: ${{ needs.echo-data2.result }}"
             to: klemens.wolfgruber@elkb.de, klemens@wolfgruber.com
-            from: GitHub Actions <noreply@beispiel.de>
+            from: GitHub Actions <noreply@vernetztekirche.de>
             body: |
               Das ist eine Testmail aus GitHub Actions.
               Status des Jobs "echo-data": ${{ needs.echo-data.result }}
