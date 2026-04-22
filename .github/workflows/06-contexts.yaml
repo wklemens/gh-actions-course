@@ -10,7 +10,12 @@ on:
             debug:
                 type: boolean
                 default: false
-
+      Mail-Benachrichtigung: 
+        type: choice
+        options:
+          - senden
+          - keine
+        default: senden
 
 env:                
     MY_WORKFLOW_VAR: 'workflow'
