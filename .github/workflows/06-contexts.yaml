@@ -62,7 +62,7 @@ jobs:
     notify:
       runs-on: ubuntu-latest
       needs: [echo-data, echo-data2]
-      if: always()
+      if: always() && inputs.Mail-Benachrichtigung == 'senden'
       steps:
         - name: Sende Test-Mail an mehrere Empfänger
           uses: dawidd6/action-send-mail@v3
